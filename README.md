@@ -1,28 +1,65 @@
 # FormFlow
 
-FormFlow is a Google Workspace-integrated workflow automation app that turns Google Form submissions into business actions.
+FormFlow is a Google Workspace-integrated workflow automation app scaffold.
 
-## Milestone status
+## Implemented module status
 
-Current milestone: **1 — repository scaffold**.
+This repository now includes:
+- Google OAuth route flow scaffold
+- Session persistence with HTTP-only signed cookies
+- Protected route middleware
+- Workspace onboarding flow and redirect logic
+- User/workspace bootstrap logic for first login
+- Database migration for users/workspaces/workspace_members
 
-The architecture and milestone plan are documented in [`docs/blueprint.md`](docs/blueprint.md).
+## Setup
 
-## Local development
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Copy environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
+3. Set all required Google OAuth and session variables.
+4. Start the app:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm install
-npm run dev
-```
+## Scripts
 
-Health check endpoint:
+- `npm run dev`
+- `npm run build`
+- `npm run lint`
+- `npm run typecheck`
+- `npm run test`
 
-```bash
-curl http://localhost:3000/api/health
-```
+## Auth and onboarding routes
 
-## Safe defaults documented
+- `GET /api/auth/google/start`
+- `GET /api/auth/google/callback`
+- `POST /api/auth/signout`
+- `POST /api/onboarding`
 
-- Unknown product details are intentionally defaulted to conservative behavior (for example, workflows default to `draft`) until requirements are finalized.
-- All domain models are strongly typed and maintained in `src/types`.
+## Protected application routes
 
+- `/dashboard`
+- `/workflows`
+- `/integrations`
+- `/logs`
+- `/billing`
+- `/settings`
+
+## Core folders
+
+- `app/`
+- `components/`
+- `lib/`
+- `services/`
+- `types/`
+- `db/`
+- `tests/`
+- `public/`
+- `docs/`
