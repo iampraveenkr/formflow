@@ -11,10 +11,16 @@ const requiredPaths = [
   "app/api/integrations/google/accounts/route.ts",
   "app/api/integrations/google/disconnect/route.ts",
   "app/api/integrations/google/refresh/route.ts",
+  "app/api/forms/google/route.ts",
+  "app/api/forms/sync/route.ts",
+  "app/api/forms/workflow/route.ts",
+  "app/api/forms/map/route.ts",
+  "app/api/forms/preview/route.ts",
   "middleware.ts",
   "supabase/migrations/202603240900_auth_onboarding.sql",
   "supabase/migrations/202603241000_google_connections.sql",
   "supabase/migrations/202603241100_full_schema.sql",
+  "supabase/migrations/202603241200_form_sync_and_mapping.sql",
   "supabase/seed.sql",
   "docs/database-schema.md"
 ];

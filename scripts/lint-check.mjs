@@ -9,7 +9,9 @@ const files = [
   "lib/server/integrations/google-oauth.ts",
   "app/(app)/integrations/page.tsx",
   "supabase/migrations/202603241100_full_schema.sql",
-  "supabase/seed.sql"
+  "supabase/seed.sql",
+  "app/(app)/workflows/[id]/page.tsx",
+  "lib/server/forms/form-sync.ts"
 ];
 
 for (const filePath of files) {

@@ -2,6 +2,7 @@
 
 This document describes the Supabase/Postgres schema defined in:
 - `supabase/migrations/202603241100_full_schema.sql`
+- `supabase/migrations/202603241200_form_sync_and_mapping.sql`
 - `supabase/seed.sql`
 
 ## Design highlights
@@ -11,6 +12,7 @@ This document describes the Supabase/Postgres schema defined in:
 - `jsonb` used for structured payload/config fields.
 - Idempotency support on `workflow_runs(workspace_id, idempotency_key)`.
 - Audit-friendly fields: `created_at`, `updated_at`, and creator/owner references where appropriate.
+- Form sync support with cached `forms.schema_json` and stable field mappings in `form_fields.internal_field_key`.
 
 ## Tables
 
@@ -49,4 +51,5 @@ This document describes the Supabase/Postgres schema defined in:
 ## Migration safety
 
 - Uses `create table if not exists` and `create index if not exists` for safe bootstrap.
+- Uses `alter table ... add column if not exists` for additive form-sync updates.
 - Uses trigger function `set_updated_at` and update triggers on mutable tables.
