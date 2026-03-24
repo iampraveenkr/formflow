@@ -2,34 +2,38 @@
 
 FormFlow is a Google Workspace-integrated workflow automation app scaffold.
 
-## Current scaffold scope
+## Stack
 
-This module provides a repository and route scaffold with placeholder UI shells and typed structure. Business logic modules are not implemented yet.
+- Next.js (App Router)
+- TypeScript (strict)
+- Tailwind CSS
+- ESLint + Prettier
+- Supabase integration wrapper
 
-## Local setup
+## Setup
 
-1. Create env file:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Copy environment file:
    ```bash
    cp .env.example .env.local
    ```
-2. Run build validation:
+3. Start the app:
    ```bash
-   npm run build
-   ```
-3. Run tests:
-   ```bash
-   npm run test
+   npm run dev
    ```
 
 ## Scripts
 
-- `npm run dev` - scaffold placeholder command
-- `npm run build` - TypeScript build validation (`tsc --noEmit`)
-- `npm run lint` - TypeScript-based lint gate for this scaffold module
-- `npm run typecheck` - strict TypeScript check
-- `npm run test` - node test runner for scaffold checks
+- `npm run dev` - start local dev server
+- `npm run build` - production build
+- `npm run lint` - lint checks
+- `npm run typecheck` - TypeScript checks
+- `npm run test` - test suite
 
-## Routes scaffolded
+## Scaffolded routes
 
 - `/login`
 - `/onboarding`
@@ -41,35 +45,14 @@ This module provides a repository and route scaffold with placeholder UI shells 
 - `/billing`
 - `/logs`
 
-## File tree
+## Key folders
 
-```text
-app/
-  (public)/
-    layout.tsx
-    login/page.tsx
-    onboarding/page.tsx
-  (app)/
-    layout.tsx
-    dashboard/page.tsx
-    workflows/page.tsx
-    workflows/[id]/page.tsx
-    integrations/page.tsx
-    settings/page.tsx
-    billing/page.tsx
-    logs/page.tsx
-  api/health/route.ts
-  globals.css
-  layout.tsx
-  page.tsx
-components/
-  layouts/
-  navigation/
-lib/
-services/
-types/
-db/
-tests/
-public/
-docs/
-```
+- `app/`
+- `components/`
+- `lib/`
+- `services/`
+- `types/`
+- `db/`
+- `tests/`
+- `public/`
+- `docs/`

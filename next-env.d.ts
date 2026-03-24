@@ -1,1 +1,4 @@
-// Next.js type references are intentionally omitted in this scaffold-only environment.
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited

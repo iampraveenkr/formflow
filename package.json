@@ -3,15 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "echo 'Next.js dev server is scaffolded but dependency install is required.'",
-    "build": "npm run typecheck",
-    "start": "echo 'Use npm run dev after installing dependencies in a network-enabled environment.'",
-    "lint": "npm run typecheck",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/navigation.test.mjs",
-    "format": "echo 'Prettier config is included; run prettier in a fully provisioned environment.'",
-    "format:check": "echo 'Prettier config is included; run prettier in a fully provisioned environment.'"
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "next": "15.2.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.21.0",
+    "eslint-config-next": "15.2.0",
+    "eslint-config-prettier": "^10.1.1",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  }
 }
