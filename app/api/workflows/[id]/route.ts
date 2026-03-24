@@ -53,7 +53,9 @@ export async function PATCH(request: Request, { params }: Params): Promise<NextR
     triggerType: body.triggerType ?? current.triggerType,
     formId: body.formId ?? current.formId,
     conditionMode: body.conditionMode ?? current.conditionMode,
-    actions: body.actions ?? current.actions
+    actions: body.actions ?? current.actions,
+    conditions: body.conditions ?? current.conditions,
+    workflowId: id
   });
 
   if (inputError) {

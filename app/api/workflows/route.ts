@@ -34,6 +34,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     settingsJson?: Record<string, unknown>;
     conditions?: Array<Record<string, unknown>>;
     actions?: Array<Record<string, unknown>>;
+    status?: "draft" | "active" | "paused" | "archived";
   };
 
   const error = validateWorkflowInput({
@@ -41,7 +42,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     triggerType: body.triggerType,
     formId: body.formId,
     conditionMode: body.conditionMode,
-    actions: body.actions
+    actions: body.actions,
+    conditions: body.conditions,
+    workflowId: null
   });
 
   if (error) {
@@ -58,7 +61,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     settingsJson: body.settingsJson,
     conditions: body.conditions,
     actions: body.actions,
-    status: "draft"
+    status: body.status ?? "draft"
   });
 
   return NextResponse.json({ ok: true, data: workflow }, { status: 201 });

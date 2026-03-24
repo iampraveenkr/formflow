@@ -1,5 +1,8 @@
 "use client";
 
+import { Banner } from "@/components/ui/banner";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -32,47 +35,25 @@ export default function OnboardingPage(): JSX.Element {
   }
 
   return (
-    <section className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold">Set up your workspace</h1>
-      <p className="mt-2 text-sm text-slate-600">Tell us your workspace and business or team name.</p>
+    <Card className="w-full max-w-2xl">
+      <h1 className="text-2xl font-semibold">Welcome to FormFlow</h1>
+      <p className="mt-2 text-sm text-slate-600">Set up your workspace to start building workflow automations.</p>
 
       <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="workspaceName">
-            Workspace name
-          </label>
-          <input
-            id="workspaceName"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-            value={workspaceName}
-            onChange={(event) => setWorkspaceName(event.target.value)}
-            required
-          />
+          <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="workspaceName">Workspace name</label>
+          <input id="workspaceName" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm" value={workspaceName} onChange={(event) => setWorkspaceName(event.target.value)} required />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="businessName">
-            Business or team name
-          </label>
-          <input
-            id="businessName"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-            value={businessName}
-            onChange={(event) => setBusinessName(event.target.value)}
-            required
-          />
+          <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="businessName">Business or team name</label>
+          <input id="businessName" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm" value={businessName} onChange={(event) => setBusinessName(event.target.value)} required />
         </div>
 
-        {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+        {errorMessage ? <Banner message={errorMessage} tone="error" /> : null}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
-        >
-          {isSubmitting ? "Saving..." : "Complete setup"}
-        </button>
+        <Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Saving..." : "Complete setup"}</Button>
       </form>
-    </section>
+    </Card>
   );
 }

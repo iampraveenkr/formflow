@@ -1,5 +1,6 @@
 "use client";
 
+import { summarizeCondition } from "@/services/workflows/engine";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -9,11 +10,35 @@ interface WorkflowPageProps {
   };
 }
 
+interface WorkflowCondition {
+  workflowId?: string;
+  fieldKey: string;
+  operator:
+    | "equals"
+    | "not_equals"
+    | "contains"
+    | "not_contains"
+    | "is_empty"
+    | "is_not_empty"
+    | "greater_than"
+    | "less_than"
+    | "greater_than_or_equal"
+    | "less_than_or_equal"
+    | "before_date"
+    | "after_date";
+  valueText?: string;
+  valueNumber?: number;
+  valueDate?: string;
+  groupId?: string;
+}
+
 interface WorkflowMeta {
   id: string;
   name: string;
   description: string | null;
   status: "draft" | "active" | "paused" | "archived";
+  conditionMode: "all" | "any";
+  conditions: WorkflowCondition[];
 }
 
 interface GoogleFormOption {
@@ -41,6 +66,7 @@ export default function WorkflowDetailPage({ params }: WorkflowPageProps): JSX.E
   const [isLoading, setIsLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+  const [runResult, setRunResult] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const hasConnectedForms = googleForms.length > 0;
@@ -106,6 +132,22 @@ export default function WorkflowDetailPage({ params }: WorkflowPageProps): JSX.E
       setErrorMessage("Unable to duplicate workflow.");
       return;
     }
+  }
+
+  async function handleRunCheck(): Promise<void> {
+    const response = await fetch(`/api/workflows/${workflowId}/run`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ submission: previewPayload, idempotencyKey: `preview-${workflowId}-${Date.now()}`, source: "webhook" })
+    });
+
+    if (!response.ok) {
+      setErrorMessage("Unable to evaluate workflow run.");
+      return;
+    }
+
+    const body = (await response.json()) as { data: { shouldRun: boolean } };
+    setRunResult(body.data.shouldRun ? "Conditions passed: workflow would run." : "Conditions failed: workflow would not run.");
   }
 
   async function handleSync(): Promise<void> {
@@ -192,6 +234,17 @@ export default function WorkflowDetailPage({ params }: WorkflowPageProps): JSX.E
       </div>
 
       {errorMessage ? <p className="text-sm text-red-700">{errorMessage}</p> : null}
+
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="text-lg font-medium">Condition mode: {workflow?.conditionMode}</h2>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-700">
+          {(workflow?.conditions ?? []).map((condition, index) => (
+            <li key={`${condition.fieldKey}-${index}`}>{summarizeCondition(condition)}</li>
+          ))}
+        </ul>
+        <button onClick={() => void handleRunCheck()} className="mt-3 rounded-md border border-slate-300 px-3 py-1.5 text-sm">Evaluate with preview payload</button>
+        {runResult ? <p className="mt-2 text-sm text-slate-700">{runResult}</p> : null}
+      </div>
 
       {!hasConnectedForms ? (
         <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">No accessible Google Forms found.</div>

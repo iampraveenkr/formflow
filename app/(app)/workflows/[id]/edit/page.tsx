@@ -1,5 +1,6 @@
 "use client";
 
+import ConditionBuilder, { type ConditionInput } from "@/components/workflows/condition-builder";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -11,6 +12,8 @@ export default function EditWorkflowPage({ params }: EditPageProps): JSX.Element
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<"draft" | "active" | "paused" | "archived">("draft");
+  const [conditionMode, setConditionMode] = useState<"all" | "any">("all");
+  const [conditions, setConditions] = useState<ConditionInput[]>([]);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -18,10 +21,20 @@ export default function EditWorkflowPage({ params }: EditPageProps): JSX.Element
     async function load(): Promise<void> {
       const response = await fetch(`/api/workflows/${params.id}`);
       if (!response.ok) return;
-      const body = (await response.json()) as { data: { name: string; description: string | null; status: "draft" | "active" | "paused" | "archived" } };
+      const body = (await response.json()) as {
+        data: {
+          name: string;
+          description: string | null;
+          status: "draft" | "active" | "paused" | "archived";
+          conditionMode: "all" | "any";
+          conditions: ConditionInput[];
+        };
+      };
       setName(body.data.name);
       setDescription(body.data.description ?? "");
       setStatus(body.data.status);
+      setConditionMode(body.data.conditionMode);
+      setConditions(body.data.conditions ?? []);
     }
 
     void load();
@@ -32,7 +45,7 @@ export default function EditWorkflowPage({ params }: EditPageProps): JSX.Element
     const response = await fetch(`/api/workflows/${params.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description, status })
+      body: JSON.stringify({ name, description, status, conditionMode, conditions })
     });
 
     if (!response.ok) {
@@ -55,6 +68,13 @@ export default function EditWorkflowPage({ params }: EditPageProps): JSX.Element
         <option value="paused">Paused</option>
         <option value="archived">Archived</option>
       </select>
+      <select value={conditionMode} onChange={(e) => setConditionMode(e.target.value as "all" | "any")} className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm">
+        <option value="all">All conditions must match</option>
+        <option value="any">Any condition can match</option>
+      </select>
+
+      <ConditionBuilder workflowId={params.id} conditions={conditions} onChange={setConditions} />
+
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
       <button onClick={() => void save()} className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white">
         Save changes
