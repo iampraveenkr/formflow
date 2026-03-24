@@ -7,16 +7,14 @@ FormFlow is a Google Workspace-integrated workflow automation app scaffold.
 - Repository scaffold
 - Authentication and workspace onboarding
 - Google account connection management
+- Full Supabase/Postgres schema migrations + seed data
 
-## Google account connection capabilities
+## Database deliverables
 
-- Connect one or more Google accounts from `/integrations`
-- OAuth consent flow with state validation
-- Encrypted token storage (access + refresh)
-- Connection status management (`active`, `expired`, `revoked`)
-- Account listing, refresh, and disconnect actions
-- Scope visibility, last sync time, and sync status in UI
-- Mock mode support (`GOOGLE_MOCK_MODE=true`) for local development
+- Full schema migration: `supabase/migrations/202603241100_full_schema.sql`
+- Single-file schema bootstrap: `supabase/formflow_schema.sql`
+- Seed file: `supabase/seed.sql`
+- Schema documentation: `docs/database-schema.md`
 
 ## Setup
 

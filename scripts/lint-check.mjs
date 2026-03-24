@@ -7,7 +7,9 @@ const files = [
   "lib/server/auth/session.ts",
   "app/(public)/onboarding/page.tsx",
   "lib/server/integrations/google-oauth.ts",
-  "app/(app)/integrations/page.tsx"
+  "app/(app)/integrations/page.tsx",
+  "supabase/migrations/202603241100_full_schema.sql",
+  "supabase/seed.sql"
 ];
 
 for (const filePath of files) {

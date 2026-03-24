@@ -13,7 +13,10 @@ const requiredPaths = [
   "app/api/integrations/google/refresh/route.ts",
   "middleware.ts",
   "supabase/migrations/202603240900_auth_onboarding.sql",
-  "supabase/migrations/202603241000_google_connections.sql"
+  "supabase/migrations/202603241000_google_connections.sql",
+  "supabase/migrations/202603241100_full_schema.sql",
+  "supabase/seed.sql",
+  "docs/database-schema.md"
 ];
 
 async function ensureFilesExist() {
@@ -31,6 +34,10 @@ async function ensureMigrationIncludesCoreTables() {
 
   const googleSql = await readFile("supabase/migrations/202603241000_google_connections.sql", "utf8");
   assert.match(googleSql, /create table if not exists public\.connected_google_accounts/i);
+
+  const fullSchemaSql = await readFile("supabase/migrations/202603241100_full_schema.sql", "utf8");
+  assert.match(fullSchemaSql, /create table if not exists public\.workflow_runs/i);
+  assert.match(fullSchemaSql, /unique \(workspace_id, idempotency_key\)/i);
 }
 
 await ensureFilesExist();
