@@ -1,58 +1,28 @@
 # FormFlow
 
-FormFlow is a Google Workspace-integrated workflow automation app scaffold.
+FormFlow is a Google Workspace-integrated workflow automation app that turns Google Form submissions into business actions.
 
-## Stack
+## Milestone status
 
-- Next.js (App Router)
-- TypeScript (strict)
-- Tailwind CSS
-- ESLint + Prettier
-- Supabase integration wrapper
+Current milestone: **1 — repository scaffold**.
 
-## Setup
+The architecture and milestone plan are documented in [`docs/blueprint.md`](docs/blueprint.md).
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Copy environment file:
-   ```bash
-   cp .env.example .env.local
-   ```
-3. Start the app:
-   ```bash
-   npm run dev
-   ```
+## Local development
 
-## Scripts
+```bash
+npm install
+npm run dev
+```
 
-- `npm run dev` - start local dev server
-- `npm run build` - production build
-- `npm run lint` - lint checks
-- `npm run typecheck` - TypeScript checks
-- `npm run test` - test suite
+Health check endpoint:
 
-## Scaffolded routes
+```bash
+curl http://localhost:3000/api/health
+```
 
-- `/login`
-- `/onboarding`
-- `/dashboard`
-- `/workflows`
-- `/workflows/[id]`
-- `/integrations`
-- `/settings`
-- `/billing`
-- `/logs`
+## Safe defaults documented
 
-## Key folders
+- Unknown product details are intentionally defaulted to conservative behavior (for example, workflows default to `draft`) until requirements are finalized.
+- All domain models are strongly typed and maintained in `src/types`.
 
-- `app/`
-- `components/`
-- `lib/`
-- `services/`
-- `types/`
-- `db/`
-- `tests/`
-- `public/`
-- `docs/`
