@@ -1,0 +1,63 @@
+{
+  "user": {
+    "id": "usr_demo_1",
+    "email": "demo@formflow.local",
+    "displayName": "Demo User",
+    "avatarUrl": null,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  "workspace": {
+    "id": "ws_demo_1",
+    "name": "Demo Workspace",
+    "slug": "demo-workspace",
+    "ownerUserId": "usr_demo_1",
+    "onboardingStatus": "complete"
+  },
+  "googleAccount": {
+    "id": "ga_demo_1",
+    "workspaceId": "ws_demo_1",
+    "googleUserId": "google_demo_1",
+    "googleEmail": "demo@gmail.com",
+    "accessTokenEncrypted": "placeholder",
+    "refreshTokenEncrypted": "placeholder",
+    "tokenExpiry": "2026-12-31T00:00:00.000Z",
+    "scopes": ["gmail.send", "spreadsheets", "calendar", "drive.file"],
+    "status": "active",
+    "lastSyncAt": null,
+    "lastSyncStatus": null,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  },
+  "form": {
+    "id": "form_demo_1",
+    "workspaceId": "ws_demo_1",
+    "googleFormId": "gform_demo_1",
+    "title": "Lead Intake",
+    "schemaJson": {"items": [{"questionId": "email", "title": "Email", "type": "EMAIL"}]},
+    "schemaVersionHash": "demo_hash_1",
+    "lastSyncedAt": "2026-01-01T00:00:00.000Z"
+  },
+  "workflow": {
+    "name": "Demo Lead Workflow",
+    "description": "Sends notification for new lead submissions.",
+    "triggerType": "form_submission",
+    "formId": "form_demo_1",
+    "status": "active",
+    "conditionMode": "all",
+    "conditions": [{"workflowId": "wf_placeholder", "fieldKey": "email", "operator": "contains", "valueText": "@"}],
+    "actions": [
+      {"actionType": "send_email", "step_order": 1, "config": {"to": "ops@formflow.local", "subject": "New lead", "body": "Lead from {{email}}"}},
+      {"actionType": "call_webhook", "step_order": 2, "config": {"url": "https://api.example.com/timeout", "method": "POST"}}
+    ]
+  },
+  "template": {
+    "id": "tpl_demo_1",
+    "workspaceId": "ws_demo_1",
+    "name": "Lead Welcome Template",
+    "content": "Hello {{first_name}}, thanks for your interest in {{company}}!"
+  },
+  "logSamples": [
+    {"message": "workflow.run.started", "level": "info"},
+    {"message": "workflow.step.failed", "level": "error"}
+  ]
+}
