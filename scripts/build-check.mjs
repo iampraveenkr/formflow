@@ -6,8 +6,14 @@ const requiredPaths = [
   "app/api/auth/google/callback/route.ts",
   "app/api/auth/signout/route.ts",
   "app/api/onboarding/route.ts",
+  "app/api/integrations/google/start/route.ts",
+  "app/api/integrations/google/callback/route.ts",
+  "app/api/integrations/google/accounts/route.ts",
+  "app/api/integrations/google/disconnect/route.ts",
+  "app/api/integrations/google/refresh/route.ts",
   "middleware.ts",
-  "supabase/migrations/202603240900_auth_onboarding.sql"
+  "supabase/migrations/202603240900_auth_onboarding.sql",
+  "supabase/migrations/202603241000_google_connections.sql"
 ];
 
 async function ensureFilesExist() {
@@ -22,6 +28,9 @@ async function ensureMigrationIncludesCoreTables() {
   assert.match(sql, /create table if not exists public\.users/i);
   assert.match(sql, /create table if not exists public\.workspaces/i);
   assert.match(sql, /create table if not exists public\.workspace_members/i);
+
+  const googleSql = await readFile("supabase/migrations/202603241000_google_connections.sql", "utf8");
+  assert.match(googleSql, /create table if not exists public\.connected_google_accounts/i);
 }
 
 await ensureFilesExist();

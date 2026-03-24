@@ -5,7 +5,9 @@ const files = [
   "services/auth/guards.mjs",
   "services/workspace/bootstrap.mjs",
   "lib/server/auth/session.ts",
-  "app/(public)/onboarding/page.tsx"
+  "app/(public)/onboarding/page.tsx",
+  "lib/server/integrations/google-oauth.ts",
+  "app/(app)/integrations/page.tsx"
 ];
 
 for (const filePath of files) {

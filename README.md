@@ -2,15 +2,21 @@
 
 FormFlow is a Google Workspace-integrated workflow automation app scaffold.
 
-## Implemented module status
+## Implemented modules
 
-This repository now includes:
-- Google OAuth route flow scaffold
-- Session persistence with HTTP-only signed cookies
-- Protected route middleware
-- Workspace onboarding flow and redirect logic
-- User/workspace bootstrap logic for first login
-- Database migration for users/workspaces/workspace_members
+- Repository scaffold
+- Authentication and workspace onboarding
+- Google account connection management
+
+## Google account connection capabilities
+
+- Connect one or more Google accounts from `/integrations`
+- OAuth consent flow with state validation
+- Encrypted token storage (access + refresh)
+- Connection status management (`active`, `expired`, `revoked`)
+- Account listing, refresh, and disconnect actions
+- Scope visibility, last sync time, and sync status in UI
+- Mock mode support (`GOOGLE_MOCK_MODE=true`) for local development
 
 ## Setup
 
@@ -22,7 +28,7 @@ This repository now includes:
    ```bash
    cp .env.example .env.local
    ```
-3. Set all required Google OAuth and session variables.
+3. Configure Google OAuth and encryption/session secrets.
 4. Start the app:
    ```bash
    npm run dev
@@ -30,36 +36,15 @@ This repository now includes:
 
 ## Scripts
 
-- `npm run dev`
 - `npm run build`
 - `npm run lint`
 - `npm run typecheck`
 - `npm run test`
 
-## Auth and onboarding routes
+## Connection API routes
 
-- `GET /api/auth/google/start`
-- `GET /api/auth/google/callback`
-- `POST /api/auth/signout`
-- `POST /api/onboarding`
-
-## Protected application routes
-
-- `/dashboard`
-- `/workflows`
-- `/integrations`
-- `/logs`
-- `/billing`
-- `/settings`
-
-## Core folders
-
-- `app/`
-- `components/`
-- `lib/`
-- `services/`
-- `types/`
-- `db/`
-- `tests/`
-- `public/`
-- `docs/`
+- `GET /api/integrations/google/start`
+- `GET /api/integrations/google/callback`
+- `GET /api/integrations/google/accounts`
+- `POST /api/integrations/google/disconnect`
+- `POST /api/integrations/google/refresh`
