@@ -1,8 +1,8 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { trackError } from "@/lib/observability/error-tracking";
 import { buildSessionCookie, createSessionToken } from "@/lib/server/auth/session";
 import { getWorkspaceById, updateWorkspaceOnboardingStatus } from "@/lib/server/db/workspace-repo";
-import { badRequest, internalError, notFound, ok, unauthorized } from "@/lib/server/http/responses";
+import { badRequest, internalError, notFound, ok } from "@/lib/server/http/responses";
 import { NextResponse } from "next/server";
 
 interface OnboardingRequestBody {
@@ -12,9 +12,9 @@ interface OnboardingRequestBody {
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
-    if (!session || !session.workspaceId) {
-      return unauthorized();
+    const session = requireWorkspaceSession(request);
+    if (session instanceof Response) {
+      return session;
     }
 
     const body = (await request.json()) as OnboardingRequestBody;

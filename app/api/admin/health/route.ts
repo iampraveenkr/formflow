@@ -1,4 +1,4 @@
-import { internalError, unauthorized, ok } from "@/lib/server/http/responses";
+import { internalError, ok, unauthorized } from "@/lib/server/http/responses";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request): Promise<NextResponse> {

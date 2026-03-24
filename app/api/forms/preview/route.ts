@@ -1,14 +1,14 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { trackError } from "@/lib/observability/error-tracking";
 import { getWorkflowFormMapping } from "@/lib/server/forms/form-sync";
-import { badRequest, internalError, unauthorized } from "@/lib/server/http/responses";
+import { badRequest, internalError } from "@/lib/server/http/responses";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
-    if (!session?.workspaceId) {
-      return unauthorized();
+    const session = requireWorkspaceSession(request);
+    if (session instanceof Response) {
+      return session;
     }
 
     const body = (await request.json()) as { workflowId?: string };

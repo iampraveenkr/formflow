@@ -1,4 +1,4 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { exchangeOAuthCodeForGoogleConnection } from "@/lib/server/integrations/google-oauth";
 import { upsertGoogleAccount } from "@/lib/server/integrations/google-connections-repo";
 import { isOAuthStateValid } from "@/services/integrations/state";
@@ -20,13 +20,13 @@ function readCookieValue(header: string | null, name: string): string | null {
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const session = getSessionFromCookieHeader(request.headers.get("cookie"));
+  const session = requireWorkspaceSession(request);
   const url = new URL(request.url);
   const error = url.searchParams.get("error");
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
 
-  if (!session?.workspaceId) {
+  if (session instanceof Response) {
     return NextResponse.redirect(`${url.origin}/login`);
   }
 

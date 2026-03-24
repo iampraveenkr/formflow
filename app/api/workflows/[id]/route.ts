@@ -1,6 +1,6 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { trackError } from "@/lib/observability/error-tracking";
-import { badRequest, internalError, notFound, ok, paymentRequired, unauthorized } from "@/lib/server/http/responses";
+import { badRequest, internalError, notFound, ok, paymentRequired } from "@/lib/server/http/responses";
 import { findWorkflow, updateWorkflow } from "@/lib/server/db/workflows/repo";
 import { enforceActionAvailability } from "@/services/billing/enforcement";
 import { validateStatusTransition, validateWorkflowInput } from "@/services/workflows/validation";
@@ -12,10 +12,10 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
+    const session = requireWorkspaceSession(request);
     const { id } = await params;
 
-    if (!session?.workspaceId) return unauthorized();
+    if (session instanceof Response) return session;
 
     const workflow = await findWorkflow(session.workspaceId, id);
     if (!workflow) return notFound();
@@ -29,10 +29,10 @@ export async function GET(request: Request, { params }: Params): Promise<NextRes
 
 export async function PATCH(request: Request, { params }: Params): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
+    const session = requireWorkspaceSession(request);
     const { id } = await params;
 
-    if (!session?.workspaceId) return unauthorized();
+    if (session instanceof Response) return session;
 
     const current = await findWorkflow(session.workspaceId, id);
     if (!current) return notFound();

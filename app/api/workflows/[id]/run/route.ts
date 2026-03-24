@@ -1,7 +1,7 @@
 import { trackEvent } from "@/lib/observability/analytics";
 import { trackError } from "@/lib/observability/error-tracking";
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
-import { badRequest, notFound, ok, paymentRequired, unauthorized, internalError } from "@/lib/server/http/responses";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
+import { badRequest, notFound, ok, paymentRequired, internalError } from "@/lib/server/http/responses";
 import { findWorkflow } from "@/lib/server/db/workflows/repo";
 import { enforceRunLimit, recordRunUsage } from "@/services/billing/enforcement";
 import { processWorkflowTrigger } from "@/services/workflows/run-orchestrator";
@@ -13,10 +13,10 @@ interface Params {
 
 export async function POST(request: Request, { params }: Params): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
+    const session = requireWorkspaceSession(request);
     const { id } = await params;
 
-    if (!session?.workspaceId) return unauthorized();
+    if (session instanceof Response) return session;
 
     const workflow = await findWorkflow(session.workspaceId, id);
     if (!workflow) return notFound();

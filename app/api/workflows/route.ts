@@ -1,14 +1,14 @@
 import { trackError } from "@/lib/observability/error-tracking";
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { createWorkflow, listWorkflows, searchWorkflows } from "@/lib/server/db/workflows/repo";
-import { badRequest, ok, paymentRequired, unauthorized, internalError } from "@/lib/server/http/responses";
+import { badRequest, ok, paymentRequired, internalError } from "@/lib/server/http/responses";
 import { enforceActionAvailability, enforceWorkflowCreateLimit } from "@/services/billing/enforcement";
 import { validateWorkflowInput } from "@/services/workflows/validation";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const session = getSessionFromCookieHeader(request.headers.get("cookie"));
-  if (!session?.workspaceId) return unauthorized();
+  const session = requireWorkspaceSession(request);
+  if (session instanceof Response) return session;
 
   const url = new URL(request.url);
   const rows = await searchWorkflows(session.workspaceId, {
@@ -22,8 +22,8 @@ export async function GET(request: Request): Promise<NextResponse> {
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
-    if (!session?.workspaceId) return unauthorized();
+    const session = requireWorkspaceSession(request);
+    if (session instanceof Response) return session;
 
     const body = (await request.json()) as {
       name?: string;

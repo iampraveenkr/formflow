@@ -1,13 +1,13 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { trackError } from "@/lib/observability/error-tracking";
 import { upsertSubscription } from "@/lib/server/db/billing/repo";
-import { badRequest, internalError, ok, unauthorized } from "@/lib/server/http/responses";
+import { badRequest, internalError, ok } from "@/lib/server/http/responses";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
-    if (!session?.workspaceId) return unauthorized();
+    const session = requireWorkspaceSession(request);
+    if (session instanceof Response) return session;
 
     const body = (await request.json()) as { planId?: "free" | "starter" | "pro" | string };
     if (!body.planId) return badRequest("planId is required", "VALIDATION_ERROR");

@@ -1,7 +1,7 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { trackError } from "@/lib/observability/error-tracking";
 import { duplicateWorkflow } from "@/lib/server/db/workflows/repo";
-import { internalError, notFound, ok, unauthorized } from "@/lib/server/http/responses";
+import { internalError, notFound, ok } from "@/lib/server/http/responses";
 import { NextResponse } from "next/server";
 
 interface Params {
@@ -10,10 +10,10 @@ interface Params {
 
 export async function POST(request: Request, { params }: Params): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
+    const session = requireWorkspaceSession(request);
     const { id } = await params;
 
-    if (!session?.workspaceId) return unauthorized();
+    if (session instanceof Response) return session;
 
     const duplicated = await duplicateWorkflow(session.workspaceId, id);
     if (!duplicated) return notFound();

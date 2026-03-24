@@ -1,8 +1,8 @@
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { trackError } from "@/lib/observability/error-tracking";
 import { getWorkflowRun } from "@/lib/server/db/formflow-repo";
 import { findWorkflow } from "@/lib/server/db/workflows/repo";
-import { internalError, notFound, ok, unauthorized } from "@/lib/server/http/responses";
+import { internalError, notFound, ok } from "@/lib/server/http/responses";
 import { retryWorkflowRun } from "@/services/workflows/run-orchestrator";
 import { NextResponse } from "next/server";
 
@@ -10,9 +10,9 @@ interface Params { params: Promise<{ runId: string }>; }
 
 export async function POST(request: Request, { params }: Params): Promise<NextResponse> {
   try {
-    const session = getSessionFromCookieHeader(request.headers.get("cookie"));
+    const session = requireWorkspaceSession(request);
     const { runId } = await params;
-    if (!session?.workspaceId) return unauthorized();
+    if (session instanceof Response) return session;
 
     const run = await getWorkflowRun(runId);
     if (!run || run.workspaceId !== session.workspaceId) return notFound();

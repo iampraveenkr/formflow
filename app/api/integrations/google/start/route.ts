@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { getSessionFromCookieHeader } from "@/lib/server/auth/request-session";
+import { requireWorkspaceSession } from "@/lib/server/auth/require-workspace-session";
 import { buildGoogleConnectionOAuthUrl } from "@/lib/server/integrations/google-oauth";
 import { listGoogleAccountsByWorkspace } from "@/lib/server/integrations/google-connections-repo";
 import { enforceAccountConnectionLimit } from "@/services/billing/enforcement";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const session = getSessionFromCookieHeader(request.headers.get("cookie"));
-  if (!session?.workspaceId) {
+  const session = requireWorkspaceSession(request);
+  if (session instanceof Response) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
